@@ -1,0 +1,99 @@
+﻿@page "/produtos"
+@inject NavigationManager Navigation
+
+<h1 class="text-center mb-4">Produtos</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Categoria</th>
+            <th>Descrição</th>
+            <th>Preço</th>
+            <th>Estoque</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var produto in Produto)
+        {
+            <tr>
+                <td>@produto.Nome</td>
+                <td>@produto.Categoria</td>
+                <td>@produto.Descricao</td>
+                <td>R$ @produto.Preco</td>
+                <td>@produto.Estoque</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<button class="btn-cadastrar" @onclick="CadastrarProduto">
+    ➕ Cadastrar Produto
+</button>
+<button class="btn-deletar=" @onclick="DeletarProduto">
+    🗑️ Deletar Produto
+</button>
+
+@code {
+    void CadastrarProduto()
+    {
+        Navigation.NavigateTo("/cadastrar-produto");
+    }
+
+    void DeletarProduto()
+    {
+        Navigation.NavigateTo("/deletar-produtos");
+    }
+
+    public class ProdutoModel
+    {
+        public string Nome { get; set; }
+        public string Categoria { get; set; }
+        public string Descricao { get; set; }
+        public decimal Preco { get; set; }
+        public int Estoque { get; set; }
+    }
+
+    List<ProdutoModel> Produto = new List<ProdutoModel>();
+
+
+    protected override void OnInitialized()
+    {
+        // 🔥 Produtos mockados (exemplo)
+        Produto = new List<ProdutoModel>()
+        {
+            new ProdutoModel {
+                Nome = "Notebook Dell Inspiron",
+                Categoria = "Eletrônicos",
+                Descricao = "Notebook com 8GB RAM e SSD 256GB",
+                Preco = 3500.90m,
+                Estoque = 10
+            },
+
+            new ProdutoModel {
+                Nome = "Camiseta Nike DryFit",
+                Categoria = "Roupas",
+                Descricao = "Camiseta esportiva respirável",
+                Preco = 89.99m,
+                Estoque = 50
+            },
+
+            new ProdutoModel {
+                Nome = "Relógio Casio",
+                Categoria = "Acessórios",
+                Descricao = "Relógio resistente à água",
+                Preco = 199.90m,
+                Estoque = 25
+            },
+
+            new ProdutoModel {
+                Nome = "Cadeira Gamer ThunderX3",
+                Categoria = "Móveis",
+                Descricao = "Cadeira confortável com ajuste de altura",
+                Preco = 999.00m,
+                Estoque = 5
+            }
+        };
+    }
+}

@@ -1,0 +1,156 @@
+﻿@page "/cadastrar-produto"
+@inject NavigationManager Navigation
+
+<style>
+    .page-title {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #BD9B16;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .form-container {
+        width: 450px;
+        margin: 0 auto;
+        background: #f7f7f7;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .form-container label {
+        font-weight: bold;
+        margin-top: 12px;
+        display: block;
+    }
+
+    .form-container input,
+    .form-container textarea,
+    .form-container select {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+
+    .btn-salvar {
+        background-color: #28a745;
+        color: white;
+        padding: 12px 20px;
+        margin-top: 20px;
+        width: 100%;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1.1rem;
+    }
+
+    .btn-voltar {
+        margin-top: 15px;
+        width: 100%;
+        background-color: #6c757d;
+        color: #fff;
+        padding: 10px;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+    }
+</style>
+
+
+<h1 class="page-title">Cadastrar Produto</h1>
+
+<div class="form-container">
+
+    <label>Nome do Produto</label>
+    <input type="text" @bind="Produto.Nome" placeholder="Ex: Notebook Dell" />
+
+    <label>Descrição</label>
+    <textarea rows="4" @bind="Produto.Descricao" placeholder="Descrição do produto..."></textarea>
+
+    <label>Preço</label>
+    <input type="text" step="0.01" @bind="Produto.Preco" placeholder="Ex: R$2999.90" />
+
+    <label>Quantidade em Estoque Inicial</label>
+    <input type="number" @bind="Produto.EstoqueInicial" placeholder="Ex: 25" />
+
+    <label>Categoria</label>
+    <select @bind="Produto.CategoriaId">
+        <option value="">Selecione...</option>
+
+        @foreach (var cat in Categorias)
+        {
+            <option value="@cat.Id">@cat.Nome</option>
+        }
+    </select>
+
+    <button class="btn-salvar" @onclick="SalvarProduto">💾 Salvar Produto</button>
+
+    <button class="btn-voltar" @onclick="Voltar">⬅ Voltar</button>
+
+</div>
+
+
+@code {
+
+    // Modelo do Produto
+    public class ProdutoModel
+    {
+        public string Nome { get; set; }
+        public string Descricao { get; set; }
+        public decimal Preco { get; set; }
+        public int EstoqueInicial { get; set; }
+        public int? CategoriaId { get; set; }
+    }
+
+    // Modelo da Categoria (pode vir do banco)
+    public class CategoriaModel
+    {
+        public int Id { get; set; }
+        public string Nome { get; set; }
+    }
+
+    ProdutoModel Produto = new ProdutoModel();
+
+    // Lista de categorias (por enquanto mock)
+    List<CategoriaModel> Categorias = new();
+
+    protected override void OnInitialized()
+    {
+        // Aqui você carregaria as categorias a partir da database via serviço
+        // Exemplo:
+        // Categorias = await CategoriaService.ObterCategorias();
+
+        // Opções de exemplo, as que tem no hmtl
+        Categorias = new List<CategoriaModel>()
+        {
+            new CategoriaModel { Id = 1, Nome = "Eletrônicos" },
+            new CategoriaModel { Id = 2, Nome = "Roupas" },
+            new CategoriaModel { Id = 3, Nome = "Acessórios" },
+            new CategoriaModel { Id = 4, Nome = "Móveis" },
+            new CategoriaModel { Id = 5, Nome = "Comidas" },
+            new CategoriaModel { Id = 6, Nome = "Veículos" }
+        };
+    }
+
+    void SalvarProduto()
+    {
+        // Aqui você salva no banco ou API
+
+        Console.WriteLine($"Produto salvo:");
+        Console.WriteLine($"Nome: {Produto.Nome}");
+        Console.WriteLine($"Categoria: {Produto.CategoriaId}");
+        Console.WriteLine($"Preço: {Produto.Preco}");
+        Console.WriteLine($"Estoque: {Produto.EstoqueInicial}");
+
+        // Redirecionar para listagem de produtos
+        Navigation.NavigateTo("/produtos");
+    }
+
+    void Voltar()
+    {
+        Navigation.NavigateTo("/");
+    }
+}

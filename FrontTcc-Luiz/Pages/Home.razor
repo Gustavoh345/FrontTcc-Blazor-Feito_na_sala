@@ -1,0 +1,108 @@
+﻿@page "/"
+@inject NavigationManager Navigation
+
+<style>
+    .logo-omni {
+        font-size: 3rem;
+        font-weight: bold;
+        color: #BD9B16;
+        letter-spacing: 2px;
+        text-align: center;
+    }
+
+    .subtitle { 
+        font-size: 1.2rem;
+        color: #555;
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+    .caixa_pesquisa {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 30px;
+    }
+
+        .caixa_pesquisa input {
+            width: 350px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #bbb;
+            margin-right: 5px;
+        }
+
+    .btn-main {
+        padding: 12px 25px;
+        font-size: 1.1rem;
+        margin: 5px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        color: white;
+    }
+
+    .btn-cadastrar {
+        background-color: #28a745;
+    }
+
+    .btn-consultar {
+        background-color: #17a2b8;
+    }
+
+    .btn-pesquisar {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .parte_cima{
+        background-color: #333333
+        height: 400px;
+        width: 100%;
+    }
+</style>
+
+<div class="parte_cima">
+    <h1 class="logo-omni">OmniMarket</h1>
+    <p class="subtitle">Seu marketplace completo em um só lugar</p>
+
+    <div class="caixa_pesquisa">
+        <input type="text" placeholder="Buscar produtos..." @bind="searchText" />
+        <button class="btn-pesquisar" @onclick="Buscar">Pesquisar</button>
+    </div>
+
+
+    <div style="text-align: center;">
+        <button class="btn-main btn-cadastrar" @onclick="CadastrarProduto">
+            ➕ Cadastrar Produto
+        </button>
+
+        <button class="btn-main btn-consultar" @onclick="ConsultarProdutos">
+            📦 Consultar Produtos
+        </button>
+    </div>
+</div>
+
+@code {
+    private string searchText = "";
+
+    void Buscar()
+    {
+        Console.WriteLine($"Buscando por: {searchText}");
+    }
+
+    void CadastrarProduto()
+    {
+        // Rota que você irá criar
+        Navigation.NavigateTo("/cadastrar-produto");
+    }
+
+    void ConsultarProdutos()
+    {
+        // Rota que você irá criar
+        Navigation.NavigateTo("/produtos");
+    }
+}

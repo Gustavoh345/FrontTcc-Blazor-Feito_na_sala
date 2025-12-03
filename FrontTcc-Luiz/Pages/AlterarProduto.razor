@@ -1,0 +1,108 @@
+﻿@page "/produtos-editaveis"
+
+<h1>Produtos Editáveis</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Categoria</th>
+            <th>Preço</th>
+            <th>Estoque</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var produto in Produtos)
+        {
+            <tr>
+                @if (produto.EmEdicao)
+                {
+                    <td><input @bind="produto.Nome" /></td>
+                    <td><input @bind="produto.Categoria" /></td>
+                    <td><input type="number" step="0.01" @bind="produto.Preco" /></td>
+                    <td><input type="number" @bind="produto.Estoque" /></td>
+                    <td>
+                        <button class="btn btn-success btn-sm" @onclick="() => SalvarProduto(produto)">💾 Salvar</button>
+                        <button class="btn btn-secondary btn-sm" @onclick="() => CancelarEdicao(produto)">❌ Cancelar</button>
+                    </td>
+                }
+                else
+                {
+                    <td>@produto.Nome</td>
+                    <td>@produto.Categoria</td>
+                    <td>R$ @produto.Preco</td>
+                    <td>@produto.Estoque</td>
+                    <td>
+                        <button class="btn btn-warning btn-sm" @onclick="() => EditarProduto(produto)">✏️ Editar</button>
+                        <button class="btn btn-danger btn-sm" @onclick="() => ExcluirProduto(produto)">🗑️ Excluir</button>
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    public class ProdutoModel
+    {
+        public string Nome { get; set; }
+        public string Categoria { get; set; }
+        public decimal Preco { get; set; }
+        public int Estoque { get; set; }
+
+        // Controle interno de edição
+        public bool EmEdicao { get; set; } = false;
+
+        // Para cancelar edição
+        public ProdutoModel Backup { get; set; }
+    }
+
+    List<ProdutoModel> Produtos = new List<ProdutoModel>();
+
+    protected override void OnInitialized()
+    {
+        Produtos = new List<ProdutoModel>
+        {
+            new ProdutoModel { Nome="Notebook Dell", Categoria="Eletrônicos", Preco=3500, Estoque=10 },
+            new ProdutoModel { Nome="Camiseta Nike", Categoria="Roupas", Preco=120, Estoque=50 },
+            new ProdutoModel { Nome="Relógio Casio", Categoria="Acessórios", Preco=199.9m, Estoque=25 },
+        };
+    }
+
+    void EditarProduto(ProdutoModel produto)
+    {
+        produto.EmEdicao = true;
+        // Criar backup para cancelar edição se necessário
+        produto.Backup = new ProdutoModel
+            {
+                Nome = produto.Nome,
+                Categoria = produto.Categoria,
+                Preco = produto.Preco,
+                Estoque = produto.Estoque
+            };
+    }
+
+    void SalvarProduto(ProdutoModel produto)
+    {
+        produto.EmEdicao = false;
+        produto.Backup = null; // descarta backup
+    }
+
+    void CancelarEdicao(ProdutoModel produto)
+    {
+        // Restaurar valores do backup
+        produto.Nome = produto.Backup.Nome;
+        produto.Categoria = produto.Backup.Categoria;
+        produto.Preco = produto.Backup.Preco;
+        produto.Estoque = produto.Backup.Estoque;
+
+        produto.EmEdicao = false;
+        produto.Backup = null;
+    }
+
+    void ExcluirProduto(ProdutoModel produto)
+    {
+        Produtos.Remove(produto);
+    }
+}
