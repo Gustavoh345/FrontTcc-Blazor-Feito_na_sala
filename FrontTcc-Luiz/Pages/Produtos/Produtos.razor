@@ -1,5 +1,7 @@
 ﻿@page "/produtos"
 @inject NavigationManager Navigation
+@using FrontTcc_Luiz
+@using FrontTcc_Luiz.Models
 
 <h1 class="text-center mb-4">Produtos</h1>
 
@@ -35,6 +37,9 @@
     🗑️ Deletar Produto
 </button>
 
+
+
+
 @code {
     void CadastrarProduto()
     {
@@ -45,18 +50,6 @@
     {
         Navigation.NavigateTo("/deletar-produtos");
     }
-
-    public class ProdutoModel
-    {
-        public string Nome { get; set; }
-        public string Categoria { get; set; }
-        public string Descricao { get; set; }
-        public decimal Preco { get; set; }
-        public int Estoque { get; set; }
-    }
-
-    List<ProdutoModel> Produto = new List<ProdutoModel>();
-
 
     protected override void OnInitialized()
     {
