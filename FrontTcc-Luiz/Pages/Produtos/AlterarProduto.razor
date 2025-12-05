@@ -1,6 +1,6 @@
 ﻿@page "/produtos-editaveis"
-@using FrontTcc_Luiz
-@using FrontTcc_Luiz.Models
+@using FrontTcc_Luiz.ViewModels
+@inject ProdutosViewModel VM
 
 <h1>Produtos Editáveis</h1>
 
@@ -15,7 +15,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var produto in Produtos)
+        @foreach (var produto in VM.Produtos)
         {
             <tr>
                 @if (produto.EmEdicao)
@@ -47,22 +47,15 @@
 
 @code {
 
-    List<ProdutosViewModel> Produtos = new List<ProdutosViewModel>();
-
     protected override void OnInitialized()
     {
-        Produtos = new List<ProdutosViewModel>
-        {
-            new ProdutosViewModel { Nome="Notebook Dell", Categoria="Eletrônicos", Preco=3500, Estoque=10 },
-            new ProdutosViewModel { Nome="Camiseta Nike", Categoria="Roupas", Preco=120, Estoque=50 },
-            new ProdutosViewModel { Nome="Relógio Casio", Categoria="Acessórios", Preco=199.9m, Estoque=25 },
-        };
+        VM.CarregarProdutos();
     }
 
     void EditarProduto(ProdutosViewModel produto)
     {
         produto.EmEdicao = true;
-        // Criar backup para cancelar edição se necessário
+
         produto.Backup = new ProdutosViewModel
             {
                 Nome = produto.Nome,
@@ -75,12 +68,13 @@
     void SalvarProduto(ProdutosViewModel produto)
     {
         produto.EmEdicao = false;
-        produto.Backup = null; // descarta backup
+        produto.Backup = null;
     }
 
     void CancelarEdicao(ProdutosViewModel produto)
     {
-        // Restaurar valores do backup
+        if (produto.Backup == null) return;
+
         produto.Nome = produto.Backup.Nome;
         produto.Categoria = produto.Backup.Categoria;
         produto.Preco = produto.Backup.Preco;
@@ -92,6 +86,6 @@
 
     void ExcluirProduto(ProdutosViewModel produto)
     {
-        Produtos.Remove(produto);
+        VM.Produtos.Remove(produto);
     }
 }

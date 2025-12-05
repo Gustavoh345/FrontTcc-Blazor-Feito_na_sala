@@ -1,92 +1,45 @@
 ﻿@page "/produtos"
-@inject NavigationManager Navigation
-@using FrontTcc_Luiz
-@using FrontTcc_Luiz.Models
+@inject ProdutosViewModel VM
+@using FrontTcc_Luiz.ViewModels
+@using FrontTcc_Luiz.Services
+@inject ProdutosViewModel VM
 
-<h1 class="text-center mb-4">Produtos</h1>
+<h3>Lista de Produtos</h3>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Nome</th>
-            <th>Categoria</th>
-            <th>Descrição</th>
-            <th>Preço</th>
-            <th>Estoque</th>
-        </tr>
-    </thead>
-
-    <tbody>
-        @foreach (var produto in Produto)
-        {
+@if (VM.Produtos.Count == 0)
+{
+    <p>Carregando...</p>
+}
+else
+{
+    <table>
+        <thead>
             <tr>
-                <td>@produto.Nome</td>
-                <td>@produto.Categoria</td>
-                <td>@produto.Descricao</td>
-                <td>R$ @produto.Preco</td>
-                <td>@produto.Estoque</td>
+                <th>Nome</th>
+                <th>Categoria</th>
+                <th>Descrição</th>
+                <th>Preço</th>
+                <th>Estoque</th>
             </tr>
-        }
-    </tbody>
-</table>
-
-<button class="btn-cadastrar" @onclick="CadastrarProduto">
-    ➕ Cadastrar Produto
-</button>
-<button class="btn-deletar=" @onclick="DeletarProduto">
-    🗑️ Deletar Produto
-</button>
-
-
-
+        </thead>
+        <tbody>
+            @foreach (var p in VM.Produtos)
+            {
+                <tr>
+                    <td>@p.Nome</td>
+                    <td>@p.Categoria</td>
+                    <td>@p.Descricao</td>
+                    <td>@p.Preco</td>
+                    <td>@p.Estoque</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
 
 @code {
-    void CadastrarProduto()
-    {
-        Navigation.NavigateTo("/cadastrar-produto");
-    }
-
-    void DeletarProduto()
-    {
-        Navigation.NavigateTo("/deletar-produtos");
-    }
-
     protected override void OnInitialized()
     {
-        // 🔥 Produtos mockados (exemplo)
-        Produto = new List<ProdutoModel>()
-        {
-            new ProdutoModel {
-                Nome = "Notebook Dell Inspiron",
-                Categoria = "Eletrônicos",
-                Descricao = "Notebook com 8GB RAM e SSD 256GB",
-                Preco = 3500.90m,
-                Estoque = 10
-            },
-
-            new ProdutoModel {
-                Nome = "Camiseta Nike DryFit",
-                Categoria = "Roupas",
-                Descricao = "Camiseta esportiva respirável",
-                Preco = 89.99m,
-                Estoque = 50
-            },
-
-            new ProdutoModel {
-                Nome = "Relógio Casio",
-                Categoria = "Acessórios",
-                Descricao = "Relógio resistente à água",
-                Preco = 199.90m,
-                Estoque = 25
-            },
-
-            new ProdutoModel {
-                Nome = "Cadeira Gamer ThunderX3",
-                Categoria = "Móveis",
-                Descricao = "Cadeira confortável com ajuste de altura",
-                Preco = 999.00m,
-                Estoque = 5
-            }
-        };
+        VM.CarregarProdutos();
     }
 }

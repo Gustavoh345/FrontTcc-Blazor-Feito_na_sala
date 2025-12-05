@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FrontTcc_Luiz.Models
+namespace FrontTcc_Luiz.ViewModels
 {
     public class PedidosViewModel
     {
-        
+
     }
 }
