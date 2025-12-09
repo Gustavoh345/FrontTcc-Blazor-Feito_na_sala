@@ -1,17 +1,18 @@
 ﻿@page "/produtos"
 @inject ProdutosViewModel VM
+@inject NavigationManager Navigation
 @using FrontTcc_Luiz.ViewModels
 @using FrontTcc_Luiz.Services
 @inject ProdutosViewModel VM
 
 <h3>Lista de Produtos</h3>
 
-@if (VM.Produtos.Count == 0)
-{
-    <p>Carregando...</p>
-}
-else
-{
+<div class"div-voltar">
+    <button class="btn-voltar" @onclick="VoltarPaginaInicial">
+        Voltar á pagina inicial
+    </button>
+</div>
+
     <table>
         <thead>
             <tr>
@@ -35,11 +36,105 @@ else
             }
         </tbody>
     </table>
+
+
+<button class="btn-cadastrar" @onclick="CadastrarProduto">
+    ➕ Cadastrar Produto
+</button>
+
+<style>
+.btn-cadastrar {
+        background-color: #28a745;
+        padding: 12px 25px;
+        font-size: 1.1rem;
+        margin: 5px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        color: white;
+    }
+
+.btn-voltar
+{
+        background-color: #FF0000;
+        padding: 12px 25px;
+        font-size: 1.1rem;
+        margin: 5px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        color: white;
+        text-align: right;
 }
 
+.div-voltar
+{
+        display: flex;
+        justify-content: flex-end;
+}
+</style>
+
+
+
 @code {
+    void CadastrarProduto()
+    {
+        Navigation.NavigateTo("/cadastrar-produto");
+    }
+
+    void VoltarPaginaInicial()
+    {
+        Navigation.NavigateTo("/");
+    }
+
+    public class ProdutoModel
+    {
+        public string Nome { get; set; }
+        public string Categoria { get; set; }
+        public string Descricao { get; set; }
+        public decimal Preco { get; set; }
+        public int Estoque { get; set; }
+    }
+
+    List<ProdutoModel> Produto = new List<ProdutoModel>();
+
+
     protected override void OnInitialized()
     {
-        VM.CarregarProdutos();
+        // 🔥 Produtos mockados (exemplo)
+        Produto = new List<ProdutoModel>()
+        {
+            new ProdutoModel {
+                Nome = "Notebook Dell Inspiron",
+                Categoria = "Eletrônicos",
+                Descricao = "Notebook com 8GB RAM e SSD 256GB",
+                Preco = 3500.90m,
+                Estoque = 10
+            },
+
+            new ProdutoModel {
+                Nome = "Camiseta Nike DryFit",
+                Categoria = "Roupas",
+                Descricao = "Camiseta esportiva respirável",
+                Preco = 89.99m,
+                Estoque = 50
+            },
+
+            new ProdutoModel {
+                Nome = "Relógio Casio",
+                Categoria = "Acessórios",
+                Descricao = "Relógio resistente à água",
+                Preco = 199.90m,
+                Estoque = 25
+            },
+
+            new ProdutoModel {
+                Nome = "Cadeira Gamer ThunderX3",
+                Categoria = "Móveis",
+                Descricao = "Cadeira confortável com ajuste de altura",
+                Preco = 999.00m,
+                Estoque = 5
+            }
+        };
     }
 }

@@ -60,6 +60,17 @@
         cursor: pointer;
     }
 
+    .btn-pedidos
+    {
+        background-color: #FB8C00;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        float: right;
+    }
+
     .parte_cima{
         background-color: #333333
         height: 400px;
@@ -67,14 +78,22 @@
     }
 </style>
 
+<button class="btn-main btn-pedidos" @onclick="ConsultarPedidos">
+    Consultar pedidos
+</button>
+
 <div class="parte_cima">
     <h1 class="logo-omni">OmniMarket</h1>
     <p class="subtitle">Seu marketplace completo em um só lugar</p>
+
+    
 
     <div class="caixa_pesquisa">
         <input type="text" placeholder="Buscar produtos..." @bind="searchText" />
         <button class="btn-pesquisar" @onclick="Buscar">Pesquisar</button>
     </div>
+
+    
 
 
     <div style="text-align: center;">
@@ -82,6 +101,7 @@
             ➕ Cadastrar Produto
         </button>
 
+      
         <button class="btn-main btn-consultar" @onclick="ConsultarProdutos">
             📦 Consultar Produtos
         </button>
@@ -106,5 +126,10 @@
     {
         // Rota que você irá criar
         Navigation.NavigateTo("/produtos");
+    }
+
+    void ConsultarPedidos()
+    {
+        Navigation.NavigateTo("/pedidos");
     }
 }
