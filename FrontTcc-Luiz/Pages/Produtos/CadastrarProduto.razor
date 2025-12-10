@@ -3,6 +3,7 @@
 @using FrontTcc_Luiz.ViewModels
 @using FrontTcc_Luiz.Services
 @inject ProdutosViewModel VM
+@inject IJSRuntime JS
 
 <style>
     .page-title {
@@ -59,7 +60,6 @@
         border-radius: 5px;
         border: none;
         cursor: pointer;
-        
         
     }
 </style>
@@ -140,8 +140,8 @@
         };
     }
 
-    void SalvarProduto()
-    {
+ async  void SalvarProduto()
+        {
         // Aqui você salva no banco ou API
 
         Console.WriteLine($"Produto salvo:");
@@ -149,6 +149,9 @@
         Console.WriteLine($"Categoria: {Produto.CategoriaId}");
         Console.WriteLine($"Preço: {Produto.Preco}");
         Console.WriteLine($"Estoque: {Produto.EstoqueInicial}");
+
+        // ⬅ Pop-up de confirmação
+        await JS.InvokeVoidAsync("mostrarPopupSucesso");
 
         // Redirecionar para listagem de produtos
         Navigation.NavigateTo("/produtos");
@@ -159,3 +162,10 @@
         Navigation.NavigateTo("/");
     }
 }
+
+
+<script>
+    function mostrarPopupSucesso() {
+        alert("Produto cadastrado com sucesso!");
+    }
+</script>

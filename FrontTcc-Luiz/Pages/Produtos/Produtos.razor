@@ -1,90 +1,124 @@
 ﻿@page "/produtos"
-@inject ProdutosViewModel VM
 @inject NavigationManager Navigation
 @using FrontTcc_Luiz.ViewModels
-@using FrontTcc_Luiz.Services
-@inject ProdutosViewModel VM
 
-<h3>Lista de Produtos</h3>
+@inject IJSRuntime JS
 
-<div class"div-voltar">
-    <button class="btn-voltar" @onclick="VoltarPaginaInicial">
-        Voltar á pagina inicial
-    </button>
-</div>
+<h1 class="text-center mb-4">Produtos</h1>
 
-    <table>
-        <thead>
+<button class="btn-voltar" @onclick="Voltar">⬅ Voltar</button>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Categoria</th>
+            <th>Descrição</th>
+            <th>Preço</th>
+            <th>Estoque</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var produto in Produto)
+        {
             <tr>
-                <th>Nome</th>
-                <th>Categoria</th>
-                <th>Descrição</th>
-                <th>Preço</th>
-                <th>Estoque</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var p in VM.Produtos)
-            {
-                <tr>
-                    <td>@p.Nome</td>
-                    <td>@p.Categoria</td>
-                    <td>@p.Descricao</td>
-                    <td>@p.Preco</td>
-                    <td>@p.Estoque</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+                <td>@produto.Nome</td>
+                <td>@produto.Categoria</td>
+                <td>@produto.Descricao</td>
+                <td>R$ @produto.Preco</td>
+                <td>@produto.Estoque</td>
+                <td>
+                    <button class="btn btn-warning btn-sm" @onclick="EditarProduto">
+                        ✏ Editar
+                    </button>
 
+                    <!-- Botão remover com popup -->
+                    <button class="btn-remover" @onclick="() => RemoverProduto(produto)">
+                        🗑️ remover
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
 
 <button class="btn-cadastrar" @onclick="CadastrarProduto">
     ➕ Cadastrar Produto
 </button>
 
+
 <style>
-.btn-cadastrar {
-        background-color: #28a745;
-        padding: 12px 25px;
-        font-size: 1.1rem;
-        margin: 5px;
+    .btn-voltar {
+        background-color: #808080;
+        color: white;
+        padding: 10px 15px;
         border: none;
         border-radius: 5px;
         cursor: pointer;
-        color: white;
+        float: left;
     }
 
-.btn-voltar
-{
+    .btn-remover {
         background-color: #FF0000;
-        padding: 12px 25px;
-        font-size: 1.1rem;
-        margin: 5px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
         color: white;
-        text-align: right;
-}
+        border: none;
+        padding: 8px 16px;
+        font-size: 14px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: 0.25s ease-in-out;
+        box-shadow: 0px 2px 4px rgba(0,0,0,0.2);
+    }
 
-.div-voltar
-{
-        display: flex;
-        justify-content: flex-end;
-}
+        .btn-remover:hover {
+            background-color: #FF4D4D;
+            transform: translateY(-2px);
+            box-shadow: 0px 4px 8px rgba(0,0,0,0.25);
+        }
 </style>
 
 
 
+
+
+<script>
+    function mostrarPopup(msg) {
+        alert(msg);
+    }
+</script>
+
+
+
+
+
+
+
 @code {
+
     void CadastrarProduto()
     {
         Navigation.NavigateTo("/cadastrar-produto");
     }
 
-    void VoltarPaginaInicial()
+    void EditarProduto()
+    {
+        Navigation.NavigateTo($"/editar-produto)");
+    }
+
+    void Voltar()
     {
         Navigation.NavigateTo("/");
+    }
+
+    async Task RemoverProduto(ProdutoModel p)
+    {
+        Produto.Remove(p);
+
+        // Chama JS para mostrar o pop-up
+        await JS.InvokeVoidAsync("mostrarPopup", "produto removido da lista");
+
+        StateHasChanged();
     }
 
     public class ProdutoModel
@@ -98,43 +132,16 @@
 
     List<ProdutoModel> Produto = new List<ProdutoModel>();
 
-
     protected override void OnInitialized()
     {
-        // 🔥 Produtos mockados (exemplo)
         Produto = new List<ProdutoModel>()
         {
-            new ProdutoModel {
-                Nome = "Notebook Dell Inspiron",
-                Categoria = "Eletrônicos",
-                Descricao = "Notebook com 8GB RAM e SSD 256GB",
-                Preco = 3500.90m,
-                Estoque = 10
-            },
-
-            new ProdutoModel {
-                Nome = "Camiseta Nike DryFit",
-                Categoria = "Roupas",
-                Descricao = "Camiseta esportiva respirável",
-                Preco = 89.99m,
-                Estoque = 50
-            },
-
-            new ProdutoModel {
-                Nome = "Relógio Casio",
-                Categoria = "Acessórios",
-                Descricao = "Relógio resistente à água",
-                Preco = 199.90m,
-                Estoque = 25
-            },
-
-            new ProdutoModel {
-                Nome = "Cadeira Gamer ThunderX3",
-                Categoria = "Móveis",
-                Descricao = "Cadeira confortável com ajuste de altura",
-                Preco = 999.00m,
-                Estoque = 5
-            }
+            new ProdutoModel { Nome = "Notebook Dell Inspiron", Categoria = "Eletrônicos", Descricao = "Notebook com 8GB RAM e SSD 256GB", Preco = 3500.90m, Estoque = 10 },
+            new ProdutoModel { Nome = "Camiseta Nike DryFit", Categoria = "Roupas", Descricao = "Camiseta esportiva respirável", Preco = 89.99m, Estoque = 50 },
+            new ProdutoModel { Nome = "Relógio Casio", Categoria = "Acessórios", Descricao = "Relógio resistente à água", Preco = 199.90m, Estoque = 25 },
+            new ProdutoModel { Nome = "Cadeira Gamer ThunderX3", Categoria = "Móveis", Descricao = "Cadeira confortável com ajuste de altura", Preco = 999.00m, Estoque = 5 }
         };
     }
 }
+
+
